@@ -1065,8 +1065,8 @@ struct RootNodeCopyHelper
         self.enforceCompatibleValueTypes(other);
         // One of the above two tests should throw, so we should never get here:
         std::ostringstream ostr;
-        ostr << "cannot convert a " << BOOST_CORE_TYPEID(OtherRootT).name()
-            << " to a " << BOOST_CORE_TYPEID(RootT).name();
+        ostr << "cannot convert a " << BOOST_SP_TYPEID(OtherRootT).name()
+            << " to a " << BOOST_SP_TYPEID(RootT).name();
         OPENVDB_THROW(TypeError, ostr.str());
     }
 };
