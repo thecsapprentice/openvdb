@@ -151,7 +151,7 @@ public:
     /// @param iRay  ray represented in index space.
     /// @param iTime if an intersection was found it is assigned the time of the
     ///              intersection along the index ray.
-    bool intersectsIS(const RayType& iRay, Real &iTime) const
+    bool intersectsIS(const RayType& iRay, RealType &iTime) const
     {
         if (!mTester.setIndexRay(iRay)) return false;//missed bbox
         iTime = mTester.getIndexTime();
@@ -176,7 +176,7 @@ public:
     ///              intersection point in index space, otherwise it is unchanged.
     /// @param iTime if an intersection was found it is assigned the time of the
     ///              intersection along the index ray.
-    bool intersectsIS(const RayType& iRay, Vec3Type& xyz, Real &iTime) const
+    bool intersectsIS(const RayType& iRay, Vec3Type& xyz, RealType &iTime) const
     {
         if (!mTester.setIndexRay(iRay)) return false;//missed bbox
         if (!math::LevelSetHDDA<TreeT, NodeLevel>::test(mTester)) return false;//missed level set
@@ -197,7 +197,7 @@ public:
     /// @param wRay   ray represented in world space.
     /// @param wTime  if an intersection was found it is assigned the time of the
     ///               intersection along the world ray.
-    bool intersectsWS(const RayType& wRay, Real &wTime) const
+    bool intersectsWS(const RayType& wRay, RealType &wTime) const
     {
         if (!mTester.setWorldRay(wRay)) return false;//missed bbox
         wTime = mTester.getWorldTime();
@@ -222,7 +222,7 @@ public:
     ///               intersection point in world space, otherwise it is unchanged.
     /// @param wTime  if an intersection was found it is assigned the time of the
     ///               intersection along the world ray.
-    bool intersectsWS(const RayType& wRay, Vec3Type& world, Real &wTime) const
+    bool intersectsWS(const RayType& wRay, Vec3Type& world, RealType &wTime) const
     {
         if (!mTester.setWorldRay(wRay)) return false;//missed bbox
         if (!math::LevelSetHDDA<TreeT, NodeLevel>::test(mTester)) return false;//missed level set
@@ -253,7 +253,7 @@ public:
     ///               of the level set surface in world space, otherwise it is unchanged.
     /// @param wTime  if an intersection was found it is assigned the time of the
     ///               intersection along the world ray.
-    bool intersectsWS(const RayType& wRay, Vec3Type& world, Vec3Type& normal, Real &wTime) const
+    bool intersectsWS(const RayType& wRay, Vec3Type& world, Vec3Type& normal, RealType &wTime) const
     {
         if (!mTester.setWorldRay(wRay)) return false;//missed bbox
         if (!math::LevelSetHDDA<TreeT, NodeLevel>::test(mTester)) return false;//missed level set
@@ -433,7 +433,7 @@ public:
     /// BBOX for the leaf nodes.
     /// @warning t0 and t1 are computed with repect to the ray represented in
     /// index space of the current grid, not world space!
-    inline bool march(Real& t0, Real& t1)
+    inline bool march(RealType& t0, RealType& t1)
     {
         const typename RayT::TimeSpan t = this->march();
         t.get(t0, t1);
@@ -456,15 +456,15 @@ public:
 
     /// @brief Return the floating-point index position along the
     /// current index ray at the specified time.
-    inline Vec3R getIndexPos(Real time) const { return mRay(time); }
+    inline Vec3R getIndexPos(RealType time) const { return mRay(time); }
 
     /// @brief Return the floating-point world position along the
     /// current index ray at the specified time.
-    inline Vec3R getWorldPos(Real time) const { return mGrid->indexToWorld(mRay(time)); }
+    inline Vec3R getWorldPos(RealType time) const { return mGrid->indexToWorld(mRay(time)); }
 
-    inline Real getWorldTime(Real time) const
+    inline RealType getWorldTime(RealType time) const
     {
-        return time*mGrid->transform().baseMap()->applyJacobian(mRay.dir()).length();
+        return time*static_cast<RealType>(mGrid->transform().baseMap()->applyJacobian(mRay.dir()).length());
     }
 
     /// @brief Return a const reference to the input grid.
@@ -502,7 +502,7 @@ private:
     const GridT*    mGrid;
     AccessorT       mAccessor;
     RayT            mRay;
-    Real            mTmax;
+    RealType        mTmax;
     math::CoordBBox mBBox;
     math::VolumeHDDA<TreeT, RayType, NodeLevel> mHDDA;
 
@@ -587,16 +587,16 @@ public:
 
     /// @brief Get the intersection point in index space.
     /// @param xyz The position in index space of the intersection.
-    inline void getIndexPos(Vec3d& xyz) const { xyz = mRay(mTime); }
+    inline void getIndexPos(Vec3T& xyz) const { xyz = mRay(mTime); }
 
     /// @brief Get the intersection point in world space.
     /// @param xyz The position in world space of the intersection.
-    inline void getWorldPos(Vec3d& xyz) const { xyz = mStencil.grid().indexToWorld(mRay(mTime)); }
+    inline void getWorldPos(Vec3T& xyz) const { xyz = mStencil.grid().indexToWorld(mRay(mTime)); }
 
     /// @brief Get the intersection point and normal in world space
     /// @param xyz The position in world space of the intersection.
     /// @param nml The surface normal in world space of the intersection.
-    inline void getWorldPosAndNml(Vec3d& xyz, Vec3d& nml)
+    inline void getWorldPosAndNml(Vec3T& xyz, Vec3T& nml)
     {
         this->getIndexPos(xyz);
         mStencil.moveTo(xyz);
@@ -669,13 +669,13 @@ private:
 
     inline RealT interpTime()
     {
-        assert(math::isApproxLarger(mT[1], mT[0], 1e-6));
+        assert(math::isApproxLarger(mT[1], mT[0], RealT(1e-6)));
         return mT[0]+(mT[1]-mT[0])*mV[0]/(mV[0]-mV[1]);
     }
 
     inline RealT interpValue(RealT time)
     {
-        const Vec3R pos = mRay(time);
+        const Vec3T pos = mRay(time);
         mStencil.moveTo(pos);
         return mStencil.interpolation(pos) - mIsoValue;
     }

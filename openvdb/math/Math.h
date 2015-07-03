@@ -122,7 +122,7 @@ template<> inline std::string negative(const std::string& val) { return val; }
 //@{
 /// Tolerance for floating-point comparison
 template<typename T> struct Tolerance { static T value() { return zeroVal<T>(); } };
-template<> struct Tolerance<float>    { static float value() { return 1e-8f; } };
+template<> struct Tolerance<float>    { static float value() { return 1e-7f; } };
 template<> struct Tolerance<double>   { static double value() { return 1e-15; } };
 //@}
 
@@ -415,7 +415,7 @@ isRelOrApproxEqual(const Type& a, const Type& b, const Type& absTol, const Type&
     // Next check to see if we are inside the relative tolerance
     // to handle large numbers that aren't within the abs tolerance
     // but could be the closest floating point representation
-    double relError;
+    Type relError;
     if (Abs(b) > Abs(a)) {
         relError = Abs((a - b) / b);
     } else {

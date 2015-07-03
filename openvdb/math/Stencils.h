@@ -102,7 +102,7 @@ public:
     /// @details This method will check to see if it is necessary to
     /// update the stencil based on the cached index coordinates of
     /// the center point.
-    inline void moveTo(const Vec3R& xyz)
+    inline void moveTo(const Vec3<ValueType>& xyz)
     {
         Coord ijk = openvdb::Coord::floor(xyz);
         if (ijk != mCenter) this->moveTo(ijk);

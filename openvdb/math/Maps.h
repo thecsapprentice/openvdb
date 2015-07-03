@@ -407,7 +407,7 @@ public:
         if (isApproxEqual(det, double(0))) {
             return false;
         } else {
-            mat *= (1.f / pow(std::abs(det),1./3.));
+            mat *= (1. / pow(std::abs(det),1./3.));
             return isUnitary(mat);
         }
     }
