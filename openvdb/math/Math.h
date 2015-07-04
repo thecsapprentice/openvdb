@@ -122,7 +122,7 @@ template<> inline std::string negative(const std::string& val) { return val; }
 //@{
 /// Tolerance for floating-point comparison
 template<typename T> struct Tolerance { static T value() { return zeroVal<T>(); } };
-template<> struct Tolerance<float>    { static float value() { return 1e-7f; } };
+template<> struct Tolerance<float>    { static float value() { return 1e-8f; } };
 template<> struct Tolerance<double>   { static double value() { return 1e-15; } };
 //@}
 
