@@ -819,7 +819,7 @@ test:
 	@echo "$@"': $$(CPPUNIT_INCL_DIR) is undefined'
 endif
 
-install: lib python vdb_print vdb_render vdb_view doc pydoc
+install: lib python doc pydoc
 	mkdir -p $(DESTDIR)/include/openvdb
 	@echo "Created $(DESTDIR)/include/openvdb"
 	pushd $(DESTDIR)/include/openvdb > /dev/null; \
@@ -875,9 +875,15 @@ install: lib python vdb_print vdb_render vdb_view doc pydoc
 	@#
 	mkdir -p $(DESTDIR)/bin
 	@echo "Created $(DESTDIR)/bin/"
-	cp -f vdb_print $(DESTDIR)/bin
+	if [ -f vdb_print ]; \
+	then \
+		cp -f vdb_print $(DESTDIR)/bin; \
+	fi
 	@echo "Copied vdb_print to $(DESTDIR)/bin/"
-	cp -f vdb_render $(DESTDIR)/bin
+	if [ -f vdb_render ]; \
+	then \
+		cp -f vdb_render $(DESTDIR)/bin ;\
+	fi
 	@echo "Copied vdb_render to $(DESTDIR)/bin/"
 	if [ -f vdb_view ]; \
 	then \
